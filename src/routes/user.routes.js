@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/user.controller.js";
+import { logOutUser, loginUser, refreshAccessToken, registerUser } from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router=Router();
 
 router.route("/register").post(
@@ -16,5 +17,13 @@ router.route("/register").post(
         }
     ]),
     registerUser
-    );
+);
+
+router.route("/login").post(loginUser);
+
+// secured routes
+// logout ke pehle custom middlware user karlo
+router.route("/logout").post(verifyJWT,logOutUser);
+router.route("/refresh-token").post(refreshAccessToken)
+
 export default router
